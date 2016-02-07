@@ -6677,6 +6677,17 @@ p, ul li, label, .radio label, select {
   left: 0;
   width: 100%; }
 
+.fixed-bottom-menu {
+  border-top: 1px solid #ccc;
+  margin: 0;
+  padding: 15px;
+  background-color: white;
+  position: fixed;
+  z-index: 200;
+  bottom: 0;
+  left: 0;
+  width: 100%; }
+
 @media (min-width: 768px) {
   .playlist-feedback-mobile {
     display: none; }
@@ -6776,8 +6787,6 @@ p, ul li, label, .radio label, select {
   padding-left: 2px; }
 .to-dos .to-do-title {
   padding-left: 0 !important; }
-.to-dos .fa {
-  padding-right: 5px; }
 .to-dos .to-do-item-title {
   color: #F7941E; }
 
@@ -6789,11 +6798,24 @@ p, ul li, label, .radio label, select {
     padding-left: 20px;
     padding-right: 20px; }
 
+.modal-title {
+  font-size: 22px; }
+
 .modal-backdrop {
   z-index: 0 !important; }
 
 .margin-bottom-16 {
   margin-bottom: 16px; }
+
+.fa-small {
+  font-size: 10px; }
+
+.fa-top {
+  vertical-align: top;
+  color: #555; }
+
+.cursor-pointer {
+  cursor: pointer !important; }
 
 .bdubs-box {
   padding: 0 !important; }
@@ -6821,5 +6843,103 @@ p, ul li, label, .radio label, select {
     width: 100%;
     margin: 0;
     max-width: none !important; }
+
+div.messages {
+  background-position: 8px 8px;
+  background-repeat: no-repeat;
+  border: 1px solid;
+  margin: 6px 0;
+  padding: 10px 10px 10px 10px; }
+  div.messages:after {
+    content: " ";
+    display: block;
+    height: 0;
+    clear: both; }
+  div.messages i {
+    font-size: 16px;
+    padding-right: 10px;
+    float: left; }
+  div.messages p {
+    float: left;
+    font-size: 14px;
+    margin-bottom: 0; }
+
+@media (min-width: 768px) {
+  div.messages i {
+    font-size: 20px; }
+  div.messages p {
+    font-size: 16px; } }
+div.status {
+  background-image: none;
+  border-color: #0691F9; }
+
+div.status, .ok {
+  color: #0691F9; }
+
+div.status, table tr.ok {
+  background-color: white; }
+
+div.warning {
+  background-image: none;
+  border-color: #F7941E; }
+
+div.warning, .warning {
+  color: #F7941E; }
+
+div.warning, table tr.warning {
+  background-color: white; }
+
+div.error {
+  background-image: none;
+  border-color: #e74c3c; }
+
+div.error, .error {
+  color: #e74c3c; }
+
+div.error, table tr.error {
+  background-color: white; }
+
+div.error p.error {
+  color: #333; }
+
+div.messages ul {
+  margin: 0 0 0 1em;
+  padding: 0; }
+
+div.messages ul li {
+  list-style-image: none; }
+
+.element-invisible {
+  position: absolute !important;
+  clip: rect(1px 1px 1px 1px);
+  clip: rect(1px, 1px, 1px, 1px);
+  overflow: hidden;
+  height: 1px; }
+
+/* Peeking */
+.peek ul {
+  margin-left: 0;
+  margin-bottom: 0; }
+.peek h5 {
+  font-size: 16px; }
+.peek form {
+  margin-top: 10px; }
+.peek .playlist-glance {
+  font-size: 16px; }
+  .peek .playlist-glance h3 {
+    font-size: 16px; }
+.peek .peek-meta-data {
+  font-size: 13px; }
+.peek .modal-dialog {
+  overflow-y: initial !important; }
+.peek .modal-body {
+  height: 450px;
+  overflow-y: auto; }
+.peek .panel {
+  box-shadow: none; }
+.peek .panel-collapse {
+  border: none; }
+.peek .panel-group {
+  margin-bottom: 0; }
 
 /*# sourceMappingURL=theme_styles.css.map */

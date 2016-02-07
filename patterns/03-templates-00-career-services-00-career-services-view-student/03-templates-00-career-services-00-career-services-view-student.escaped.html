@@ -214,14 +214,377 @@
                                     &lt;div class=&quot;main-box tab-box minimal-tabs&quot;&gt;
                                         &lt;div class=&quot;bs-example bs-example-tabs&quot; data-example-id=&quot;togglable-tabs&quot;&gt;
                                             &lt;ul id=&quot;myTabs&quot; class=&quot;nav nav-tabs&quot; role=&quot;tablist&quot;&gt;
+                                                &lt;li role=&quot;presentation&quot; class=&quot;active&quot;&gt;&lt;a href=&quot;#engagement-tab&quot; role=&quot;tab&quot; data-toggle=&quot;tab&quot; aria-controls=&quot;engagement-tab&quot;&gt;Total Engagement&lt;/a&gt;&lt;/li&gt;
+                                                &lt;li role=&quot;presentation&quot;&gt;&lt;a href=&quot;#interested-tab&quot; role=&quot;tab&quot; data-toggle=&quot;tab&quot; aria-controls=&quot;interested-tab&quot;&gt;Interested in Applying&lt;/a&gt;&lt;/li&gt;
+                                                &lt;li role=&quot;presentation&quot;&gt;&lt;a href=&quot;#favorites-tab&quot; role=&quot;tab&quot; data-toggle=&quot;tab&quot; aria-controls=&quot;favorites-tab&quot; aria-expanded=&quot;true&quot;&gt;Favorites&lt;/a&gt;&lt;/li&gt;
+                                                &lt;li role=&quot;presentation&quot;&gt;&lt;a href=&quot;#previews-tab&quot; role=&quot;tab&quot; data-toggle=&quot;tab&quot; aria-controls=&quot;previews-tab&quot;&gt;Previews&lt;/a&gt;&lt;/li&gt;
+                                            &lt;/ul&gt;
+                                            &lt;div id=&quot;myTabContent&quot; class=&quot;tab-content&quot;&gt;
+                                                &lt;div role=&quot;tabpanel&quot; class=&quot;tab-pane fade in active pre-scrollable&quot; id=&quot;engagement-tab&quot; aria-labelledBy=&quot;engagement-tab&quot;&gt;
+                                                    &lt;div class=&quot;row&quot;&gt;
+                                                        &lt;div class=&quot;col-md-12&quot;&gt;
+                                                            &lt;div class=&quot;graph-box&quot;&gt;
+                                                                &lt;div id=&quot;my_chart&quot;&gt;&lt;/div&gt;
+                                                                &lt;script type=&quot;application/javascript&quot;&gt;
+                                                                    var client = new Keen({
+                                                                        projectId: &quot;5596ea26672e6c2eb846b682&quot;,
+                                                                        readKey: &quot;1a072662bdeff8ff84672430b306d2aae22363f7bba6c8021b71548260adb82eab584fa5db7a72bb76a9a91e1f7af2752dac5bb54c837a3bc0da3e1832638796bcbc39ea9d3341961162b08339c3043231783893681041eab5c53d221ee65dee624561fe20ed975249e4db4d62cafffb&quot;
+
+                                                                    });
+
+                                                                    Keen.ready(function(){
+
+                                                                        var interval = &quot;daily&quot;;
+                                                                        var timeframe = &quot;this_21_days&quot;;
+                                                                        var timezone = &quot;UTC&quot;;
+
+                                                                        var previews = new Keen.Query(&quot;count&quot;, {
+                                                                            eventCollection: &quot;playlist&quot;,
+                                                                            filters: [
+                                                                                {
+                                                                                    &quot;operator&quot;: &quot;eq&quot;,
+                                                                                    &quot;property_name&quot;: &quot;org_id&quot;,
+                                                                                    &quot;property_value&quot;: &quot;59337&quot;
+                                                                                }
+                                                                            ],
+                                                                            interval: interval,
+                                                                            timeframe: timeframe,
+                                                                            timezone: timezone
+                                                                        });
+
+                                                                        var interactions = new Keen.Query(&quot;count&quot;, { // second query
+                                                                            eventCollection: &quot;interaction&quot;,
+                                                                            filters: [
+                                                                                {
+                                                                                    &quot;operator&quot;: &quot;eq&quot;,
+                                                                                    &quot;property_name&quot;: &quot;org_id&quot;,
+                                                                                    &quot;property_value&quot;: &quot;59337&quot;
+                                                                                }
+                                                                            ],
+                                                                            interval: interval,
+                                                                            timeframe: timeframe,
+                                                                            timezone: timezone
+                                                                        });
+
+                                                                        var interested = new Keen.Query(&quot;count&quot;, {
+                                                                            eventCollection: &quot;interestedapplying&quot;,
+                                                                            filters: [
+                                                                                {
+                                                                                    &quot;operator&quot;: &quot;eq&quot;,
+                                                                                    &quot;property_name&quot;: &quot;org_id&quot;,
+                                                                                    &quot;property_value&quot;: &quot;59337&quot;
+                                                                                }
+                                                                            ],
+                                                                            interval: &quot;daily&quot;,
+                                                                            timeframe: &quot;this_21_days&quot;,
+                                                                            timezone: &quot;UTC&quot;
+                                                                        });
+
+                                                                        var chart = new Keen.Dataviz()
+                                                                            .el(document.getElementById(&quot;my_chart&quot;))
+                                                                            .colors([ &quot;#ff0000&quot;, &quot;#222&quot;, &quot;lightblue&quot; ])
+                                                                            .chartType(&quot;linechart&quot;)
+                                                                            .title([])
+                                                                            .height(300)
+                                                                            .chartOptions({
+                                                                                chartArea:{
+                                                                                    left:40,
+                                                                                    top:20,
+                                                                                    bottom: '0%',
+                                                                                    width: '90%',
+                                                                                },
+                                                                                lineWidth: 2,
+                                                                                pointSize: 3,
+                                                                                curveType: &quot;function&quot;,
+                                                                                series: {
+                                                                                    0: { color: '#F7941E' },
+                                                                                    1: { color: '#0691F9' },
+                                                                                    2: { color: '#75D042' }
+                                                                                },
+                                                                                tooltip: {
+                                                                                    textStyle: {
+                                                                                        color: '#555',
+                                                                                        fontName: 'Proxima Nova',
+                                                                                        fontSize: 12
+                                                                                    }
+                                                                                },
+                                                                                hAxis: {
+                                                                                    titleTextStyle: {
+                                                                                        italic: false,
+                                                                                        fontSize: 12,
+                                                                                        fontName: 'Proxima Nova',
+                                                                                        color: '#555'
+                                                                                    },
+                                                                                    format:'M/d/yy',
+                                                                                    gridlines: { count: 7},
+                                                                                    textStyle: {
+                                                                                        color: '#555',
+                                                                                        fontName: 'Proxima Nova',
+                                                                                        fontSize: 12
+                                                                                    },
+                                                                                    gridlines: {
+                                                                                        color: 'transparent'
+                                                                                    }
+                                                                                },
+                                                                                vAxis: {
+                                                                                    title: 'Interactions',
+                                                                                    titleTextStyle: {
+                                                                                        italic: false,
+                                                                                        fontSize: 12,
+                                                                                        fontName: 'Proxima Nova',
+                                                                                        color: '#555'
+                                                                                    },
+                                                                                    textStyle: {
+                                                                                        color: '#555',
+                                                                                        fontName: 'Proxima Nova',
+                                                                                        fontSize: 12
+                                                                                    },
+                                                                                    gridlines: {
+                                                                                        color: '#eee'
+                                                                                    }
+                                                                                },
+                                                                                legend: { position: &quot;bottom&quot; }
+                                                                            })
+                                                                            .prepare();
+
+                                                                        client.run([previews, interactions, interested], function(err, res){ // run the queries
+
+                                                                            var result1 = res[0].result;  // data from first query
+                                                                            var result2 = res[1].result;  // data from second query
+                                                                            var result3 = res[2].result;  // data from third query
+                                                                            var data = [];  // place for combined results
+                                                                            var i=0;
+
+                                                                            while (i &lt; result1.length) {
+                                                                                // res[1].result/res[0].result).toFixed(2) * 100
+                                                                                // console.log(result1[i]);
+
+                                                                                data[i] = { // format the data so it can be charted
+                                                                                    timeframe: result1[i][&quot;timeframe&quot;],
+                                                                                    value: [
+                                                                                        { category: &quot;Previews&quot;, result: result1[i][&quot;value&quot;] },
+                                                                                        { category: &quot;Interactions&quot;, result: result2[i][&quot;value&quot;] },
+                                                                                        { category: &quot;Interested in Applying&quot;, result: result3[i][&quot;value&quot;] }
+                                                                                    ]
+                                                                                };
+
+                                                                                if (i == result1.length-1) { // chart the data
+                                                                                    chart
+                                                                                    .parseRawData({ result: data })
+                                                                                    .render();
+                                                                                }
+                                                                                i++;
+                                                                            }
+                                                                        });
+
+                                                                    });
+                                                                &lt;/script&gt;                                                            &lt;/div&gt;
+                                                        &lt;/div&gt;
+                                                    &lt;/div&gt;
+                                                &lt;/div&gt;
+                                                &lt;div role=&quot;tabpanel&quot; class=&quot;tab-pane fade pre-scrollable&quot; id=&quot;interested-tab&quot; aria-labelledBy=&quot;interested-tab&quot;&gt;
+                                                    &lt;ul&gt;
+                                                        &lt;li class=&quot;list-group-item text-center&quot;&gt;
+                                                            &lt;i class=&quot;fa fa-star-half-empty giant&quot;&gt;&lt;/i&gt;&lt;p&gt;Nothing yet!&lt;/p&gt;&lt;p&gt;Reach out to this student to encourage them to get in the game!&lt;/p&gt;
+                                                        &lt;/li&gt;
+                                                    &lt;/ul&gt;
+                                                &lt;/div&gt;
+                                                &lt;div role=&quot;tabpanel&quot; class=&quot;tab-pane fade pre-scrollable&quot; id=&quot;favorites-tab&quot; aria-labelledBy=&quot;favorites-tab&quot;&gt;
+                                                    &lt;div class=&quot;main-box-body clearfix&quot;&gt;
+                                                        &lt;p&gt;Total: 15&lt;/p&gt;
+                                                        &lt;ul class=&quot;list-group to-dos&quot;&gt;
+                                                            &lt;li class=&quot;list-group-item&quot;&gt;
+                                                                &lt;div class=&quot;col-xs-3&quot;&gt;
+                                                                    1 day ago
+                                                                &lt;/div&gt;
+                                                                &lt;div class=&quot;col-xs-9&quot;&gt;&lt;a href=&quot;../../patterns/04-pages-03-job-j-posting/04-pages-03-job-j-posting.html&quot;&gt;&lt;strong&gt;Medical Assistant&lt;/strong&gt;&lt;/a&gt; &lt;span class=&quot;small&quot;&gt;(Chicago, IL - Rush)&lt;/span&gt;&lt;/div&gt;
+                                                                &lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;
+                                                            &lt;/li&gt;
+                                                            &lt;li class=&quot;list-group-item&quot;&gt;
+                                                                &lt;div class=&quot;col-xs-3&quot;&gt;
+                                                                    3 days ago
+                                                                &lt;/div&gt;
+                                                                &lt;div class=&quot;col-xs-9&quot;&gt;&lt;a href=&quot;../../patterns/04-pages-03-job-j-posting/04-pages-03-job-j-posting.html&quot;&gt;&lt;strong&gt;Awesome Medical Assistant&lt;/strong&gt;&lt;/a&gt; &lt;span class=&quot;small&quot;&gt;(St. Louis, MO - BJC Healthcare)&lt;/span&gt;&lt;/div&gt;
+                                                                &lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;
+                                                            &lt;/li&gt;
+                                                            &lt;li class=&quot;list-group-item&quot;&gt;
+                                                                &lt;div class=&quot;col-xs-3&quot;&gt;
+                                                                    4 days ago
+                                                                &lt;/div&gt;
+                                                                &lt;div class=&quot;col-xs-9&quot;&gt;&lt;a href=&quot;../../patterns/04-pages-03-job-j-posting/04-pages-03-job-j-posting.html&quot;&gt;&lt;strong&gt;Medical Assistant&lt;/strong&gt;&lt;/a&gt; &lt;span class=&quot;small&quot;&gt;(Chicago, IL - Rush)&lt;/span&gt;&lt;/div&gt;
+                                                                &lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;
+                                                            &lt;/li&gt;
+                                                            &lt;li class=&quot;list-group-item&quot;&gt;
+                                                                &lt;div class=&quot;col-xs-3&quot;&gt;
+                                                                    4 days ago
+                                                                &lt;/div&gt;
+                                                                &lt;div class=&quot;col-xs-9&quot;&gt;&lt;a href=&quot;../../patterns/04-pages-03-job-j-posting/04-pages-03-job-j-posting.html&quot;&gt;&lt;strong&gt;Awesome Medical Assistant&lt;/strong&gt;&lt;/a&gt; &lt;span class=&quot;small&quot;&gt;(St. Louis, MO - BJC Healthcare)&lt;/span&gt;&lt;/div&gt;
+                                                                &lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;
+                                                            &lt;/li&gt;
+                                                            &lt;li class=&quot;list-group-item&quot;&gt;
+                                                                &lt;div class=&quot;col-xs-3&quot;&gt;
+                                                                    5 days ago
+                                                                &lt;/div&gt;
+                                                                &lt;div class=&quot;col-xs-9&quot;&gt;&lt;a href=&quot;../../patterns/04-pages-03-job-j-posting/04-pages-03-job-j-posting.html&quot;&gt;&lt;strong&gt;Medical Assistant&lt;/strong&gt;&lt;/a&gt; &lt;span class=&quot;small&quot;&gt;(Chicago, IL - Rush)&lt;/span&gt;&lt;/div&gt;
+                                                                &lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;
+                                                            &lt;/li&gt;
+                                                            &lt;li class=&quot;list-group-item&quot;&gt;
+                                                                &lt;div class=&quot;col-xs-3&quot;&gt;
+                                                                    7 days ago
+                                                                &lt;/div&gt;
+                                                                &lt;div class=&quot;col-xs-9&quot;&gt;&lt;a href=&quot;../../patterns/04-pages-03-job-j-posting/04-pages-03-job-j-posting.html&quot;&gt;&lt;strong&gt;Awesome Medical Assistant&lt;/strong&gt;&lt;/a&gt; &lt;span class=&quot;small&quot;&gt;(St. Louis, MO - BJC Healthcare)&lt;/span&gt;&lt;/div&gt;
+                                                                &lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;
+                                                            &lt;/li&gt;
+                                                            &lt;li class=&quot;list-group-item&quot;&gt;
+                                                                &lt;div class=&quot;col-xs-3&quot;&gt;
+                                                                    10 days ago
+                                                                &lt;/div&gt;
+                                                                &lt;div class=&quot;col-xs-9&quot;&gt;&lt;a href=&quot;../../patterns/04-pages-03-job-j-posting/04-pages-03-job-j-posting.html&quot;&gt;&lt;strong&gt;Medical Assistant&lt;/strong&gt;&lt;/a&gt; &lt;span class=&quot;small&quot;&gt;(Chicago, IL - Rush)&lt;/span&gt;&lt;/div&gt;
+                                                                &lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;
+                                                            &lt;/li&gt;
+                                                            &lt;li class=&quot;list-group-item&quot;&gt;
+                                                                &lt;div class=&quot;col-xs-3&quot;&gt;
+                                                                    13 days ago
+                                                                &lt;/div&gt;
+                                                                &lt;div class=&quot;col-xs-9&quot;&gt;&lt;a href=&quot;../../patterns/04-pages-03-job-j-posting/04-pages-03-job-j-posting.html&quot;&gt;&lt;strong&gt;Awesome Medical Assistant&lt;/strong&gt;&lt;/a&gt; &lt;span class=&quot;small&quot;&gt;(St. Louis, MO - BJC Healthcare)&lt;/span&gt;&lt;/div&gt;
+                                                                &lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;
+                                                            &lt;/li&gt;
+                                                            &lt;li class=&quot;list-group-item&quot;&gt;
+                                                                &lt;div class=&quot;col-xs-3&quot;&gt;
+                                                                    14 days ago
+                                                                &lt;/div&gt;
+                                                                &lt;div class=&quot;col-xs-9&quot;&gt;&lt;a href=&quot;../../patterns/04-pages-03-job-j-posting/04-pages-03-job-j-posting.html&quot;&gt;&lt;strong&gt;Medical Assistant&lt;/strong&gt;&lt;/a&gt; &lt;span class=&quot;small&quot;&gt;(Chicago, IL - Rush)&lt;/span&gt;&lt;/div&gt;
+                                                                &lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;
+                                                            &lt;/li&gt;
+                                                            &lt;li class=&quot;list-group-item&quot;&gt;
+                                                                &lt;div class=&quot;col-xs-3&quot;&gt;
+                                                                    14 days ago
+                                                                &lt;/div&gt;
+                                                                &lt;div class=&quot;col-xs-9&quot;&gt;&lt;a href=&quot;../../patterns/04-pages-03-job-j-posting/04-pages-03-job-j-posting.html&quot;&gt;&lt;strong&gt;Awesome Medical Assistant&lt;/strong&gt;&lt;/a&gt; &lt;span class=&quot;small&quot;&gt;(St. Louis, MO - BJC Healthcare)&lt;/span&gt;&lt;/div&gt;
+                                                                &lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;
+                                                            &lt;/li&gt;
+                                                            &lt;li class=&quot;list-group-item&quot;&gt;
+                                                                &lt;div class=&quot;col-xs-3&quot;&gt;
+                                                                    15 days ago
+                                                                &lt;/div&gt;
+                                                                &lt;div class=&quot;col-xs-9&quot;&gt;&lt;a href=&quot;../../patterns/04-pages-03-job-j-posting/04-pages-03-job-j-posting.html&quot;&gt;&lt;strong&gt;Medical Assistant&lt;/strong&gt;&lt;/a&gt; &lt;span class=&quot;small&quot;&gt;(Chicago, IL - Rush)&lt;/span&gt;&lt;/div&gt;
+                                                                &lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;
+                                                            &lt;/li&gt;
+                                                            &lt;li class=&quot;list-group-item&quot;&gt;
+                                                                &lt;div class=&quot;col-xs-3&quot;&gt;
+                                                                    17 days ago
+                                                                &lt;/div&gt;
+                                                                &lt;div class=&quot;col-xs-9&quot;&gt;&lt;a href=&quot;../../patterns/04-pages-03-job-j-posting/04-pages-03-job-j-posting.html&quot;&gt;&lt;strong&gt;Awesome Medical Assistant&lt;/strong&gt;&lt;/a&gt; &lt;span class=&quot;small&quot;&gt;(St. Louis, MO - BJC Healthcare)&lt;/span&gt;&lt;/div&gt;
+                                                                &lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;
+                                                            &lt;/li&gt;
+                                                        &lt;/ul&gt;
+                                                    &lt;/div&gt;
+                                                &lt;/div&gt;
+                                                &lt;div role=&quot;tabpanel&quot; class=&quot;tab-pane fade pre-scrollable&quot; id=&quot;previews-tab&quot; aria-labelledBy=&quot;previews-tab&quot;&gt;
+                                                    &lt;div class=&quot;main-box-body clearfix&quot;&gt;
+                                                        &lt;p&gt;Total: 15&lt;/p&gt;
+                                                        &lt;ul class=&quot;list-group to-dos&quot;&gt;
+                                                            &lt;li class=&quot;list-group-item&quot;&gt;
+                                                                &lt;div class=&quot;col-xs-3&quot;&gt;
+                                                                    1 day ago
+                                                                &lt;/div&gt;
+                                                                &lt;div class=&quot;col-xs-9&quot;&gt;&lt;a href=&quot;../../patterns/04-pages-03-job-j-posting/04-pages-03-job-j-posting.html&quot;&gt;&lt;strong&gt;Medical Assistant&lt;/strong&gt;&lt;/a&gt; &lt;span class=&quot;small&quot;&gt;(Chicago, IL - Rush)&lt;/span&gt;&lt;/div&gt;
+                                                                &lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;
+                                                            &lt;/li&gt;
+                                                            &lt;li class=&quot;list-group-item&quot;&gt;
+                                                                &lt;div class=&quot;col-xs-3&quot;&gt;
+                                                                    3 days ago
+                                                                &lt;/div&gt;
+                                                                &lt;div class=&quot;col-xs-9&quot;&gt;&lt;a href=&quot;../../patterns/04-pages-03-job-j-posting/04-pages-03-job-j-posting.html&quot;&gt;&lt;strong&gt;Awesome Medical Assistant&lt;/strong&gt;&lt;/a&gt; &lt;span class=&quot;small&quot;&gt;(St. Louis, MO - BJC Healthcare)&lt;/span&gt;&lt;/div&gt;
+                                                                &lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;
+                                                            &lt;/li&gt;
+                                                            &lt;li class=&quot;list-group-item&quot;&gt;
+                                                                &lt;div class=&quot;col-xs-3&quot;&gt;
+                                                                    4 days ago
+                                                                &lt;/div&gt;
+                                                                &lt;div class=&quot;col-xs-9&quot;&gt;&lt;a href=&quot;../../patterns/04-pages-03-job-j-posting/04-pages-03-job-j-posting.html&quot;&gt;&lt;strong&gt;Medical Assistant&lt;/strong&gt;&lt;/a&gt; &lt;span class=&quot;small&quot;&gt;(Chicago, IL - Rush)&lt;/span&gt;&lt;/div&gt;
+                                                                &lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;
+                                                            &lt;/li&gt;
+                                                            &lt;li class=&quot;list-group-item&quot;&gt;
+                                                                &lt;div class=&quot;col-xs-3&quot;&gt;
+                                                                    4 days ago
+                                                                &lt;/div&gt;
+                                                                &lt;div class=&quot;col-xs-9&quot;&gt;&lt;a href=&quot;../../patterns/04-pages-03-job-j-posting/04-pages-03-job-j-posting.html&quot;&gt;&lt;strong&gt;Awesome Medical Assistant&lt;/strong&gt;&lt;/a&gt; &lt;span class=&quot;small&quot;&gt;(St. Louis, MO - BJC Healthcare)&lt;/span&gt;&lt;/div&gt;
+                                                                &lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;
+                                                            &lt;/li&gt;
+                                                            &lt;li class=&quot;list-group-item&quot;&gt;
+                                                                &lt;div class=&quot;col-xs-3&quot;&gt;
+                                                                    5 days ago
+                                                                &lt;/div&gt;
+                                                                &lt;div class=&quot;col-xs-9&quot;&gt;&lt;a href=&quot;../../patterns/04-pages-03-job-j-posting/04-pages-03-job-j-posting.html&quot;&gt;&lt;strong&gt;Medical Assistant&lt;/strong&gt;&lt;/a&gt; &lt;span class=&quot;small&quot;&gt;(Chicago, IL - Rush)&lt;/span&gt;&lt;/div&gt;
+                                                                &lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;
+                                                            &lt;/li&gt;
+                                                            &lt;li class=&quot;list-group-item&quot;&gt;
+                                                                &lt;div class=&quot;col-xs-3&quot;&gt;
+                                                                    7 days ago
+                                                                &lt;/div&gt;
+                                                                &lt;div class=&quot;col-xs-9&quot;&gt;&lt;a href=&quot;../../patterns/04-pages-03-job-j-posting/04-pages-03-job-j-posting.html&quot;&gt;&lt;strong&gt;Awesome Medical Assistant&lt;/strong&gt;&lt;/a&gt; &lt;span class=&quot;small&quot;&gt;(St. Louis, MO - BJC Healthcare)&lt;/span&gt;&lt;/div&gt;
+                                                                &lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;
+                                                            &lt;/li&gt;
+                                                            &lt;li class=&quot;list-group-item&quot;&gt;
+                                                                &lt;div class=&quot;col-xs-3&quot;&gt;
+                                                                    10 days ago
+                                                                &lt;/div&gt;
+                                                                &lt;div class=&quot;col-xs-9&quot;&gt;&lt;a href=&quot;../../patterns/04-pages-03-job-j-posting/04-pages-03-job-j-posting.html&quot;&gt;&lt;strong&gt;Medical Assistant&lt;/strong&gt;&lt;/a&gt; &lt;span class=&quot;small&quot;&gt;(Chicago, IL - Rush)&lt;/span&gt;&lt;/div&gt;
+                                                                &lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;
+                                                            &lt;/li&gt;
+                                                            &lt;li class=&quot;list-group-item&quot;&gt;
+                                                                &lt;div class=&quot;col-xs-3&quot;&gt;
+                                                                    13 days ago
+                                                                &lt;/div&gt;
+                                                                &lt;div class=&quot;col-xs-9&quot;&gt;&lt;a href=&quot;../../patterns/04-pages-03-job-j-posting/04-pages-03-job-j-posting.html&quot;&gt;&lt;strong&gt;Awesome Medical Assistant&lt;/strong&gt;&lt;/a&gt; &lt;span class=&quot;small&quot;&gt;(St. Louis, MO - BJC Healthcare)&lt;/span&gt;&lt;/div&gt;
+                                                                &lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;
+                                                            &lt;/li&gt;
+                                                            &lt;li class=&quot;list-group-item&quot;&gt;
+                                                                &lt;div class=&quot;col-xs-3&quot;&gt;
+                                                                    14 days ago
+                                                                &lt;/div&gt;
+                                                                &lt;div class=&quot;col-xs-9&quot;&gt;&lt;a href=&quot;../../patterns/04-pages-03-job-j-posting/04-pages-03-job-j-posting.html&quot;&gt;&lt;strong&gt;Medical Assistant&lt;/strong&gt;&lt;/a&gt; &lt;span class=&quot;small&quot;&gt;(Chicago, IL - Rush)&lt;/span&gt;&lt;/div&gt;
+                                                                &lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;
+                                                            &lt;/li&gt;
+                                                            &lt;li class=&quot;list-group-item&quot;&gt;
+                                                                &lt;div class=&quot;col-xs-3&quot;&gt;
+                                                                    14 days ago
+                                                                &lt;/div&gt;
+                                                                &lt;div class=&quot;col-xs-9&quot;&gt;&lt;a href=&quot;../../patterns/04-pages-03-job-j-posting/04-pages-03-job-j-posting.html&quot;&gt;&lt;strong&gt;Awesome Medical Assistant&lt;/strong&gt;&lt;/a&gt; &lt;span class=&quot;small&quot;&gt;(St. Louis, MO - BJC Healthcare)&lt;/span&gt;&lt;/div&gt;
+                                                                &lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;
+                                                            &lt;/li&gt;
+                                                            &lt;li class=&quot;list-group-item&quot;&gt;
+                                                                &lt;div class=&quot;col-xs-3&quot;&gt;
+                                                                    15 days ago
+                                                                &lt;/div&gt;
+                                                                &lt;div class=&quot;col-xs-9&quot;&gt;&lt;a href=&quot;../../patterns/04-pages-03-job-j-posting/04-pages-03-job-j-posting.html&quot;&gt;&lt;strong&gt;Medical Assistant&lt;/strong&gt;&lt;/a&gt; &lt;span class=&quot;small&quot;&gt;(Chicago, IL - Rush)&lt;/span&gt;&lt;/div&gt;
+                                                                &lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;
+                                                            &lt;/li&gt;
+                                                            &lt;li class=&quot;list-group-item&quot;&gt;
+                                                                &lt;div class=&quot;col-xs-3&quot;&gt;
+                                                                    17 days ago
+                                                                &lt;/div&gt;
+                                                                &lt;div class=&quot;col-xs-9&quot;&gt;&lt;a href=&quot;../../patterns/04-pages-03-job-j-posting/04-pages-03-job-j-posting.html&quot;&gt;&lt;strong&gt;Awesome Medical Assistant&lt;/strong&gt;&lt;/a&gt; &lt;span class=&quot;small&quot;&gt;(St. Louis, MO - BJC Healthcare)&lt;/span&gt;&lt;/div&gt;
+                                                                &lt;div class=&quot;clear&quot;&gt;&lt;/div&gt;
+                                                            &lt;/li&gt;
+                                                        &lt;/ul&gt;
+                                                    &lt;/div&gt;
+                                                &lt;/div&gt;
+                                            &lt;/div&gt;
+                                        &lt;/div&gt;&lt;!-- /example --&gt;
+                                    &lt;/div&gt;
+
+                                    &lt;div class=&quot;main-box tab-box minimal-tabs&quot;&gt;
+                                        &lt;div class=&quot;bs-example bs-example-tabs&quot; data-example-id=&quot;togglable-tabs&quot;&gt;
+                                            &lt;ul id=&quot;myTabs&quot; class=&quot;nav nav-tabs&quot; role=&quot;tablist&quot;&gt;
                                                 &lt;li role=&quot;presentation&quot; class=&quot;active&quot;&gt;&lt;a href=&quot;#to-dos-tab&quot; role=&quot;tab&quot; data-toggle=&quot;tab&quot; aria-controls=&quot;to-dos-tab&quot;&gt;To-Dos&lt;/a&gt;&lt;/li&gt;
-                                                &lt;li role=&quot;presentation&quot;&gt;&lt;a href=&quot;#engagement-tab&quot; role=&quot;tab&quot; data-toggle=&quot;tab&quot; aria-controls=&quot;engagement-tab&quot; aria-expanded=&quot;true&quot;&gt;Engagement&lt;/a&gt;&lt;/li&gt;
                                                 &lt;li role=&quot;presentation&quot;&gt;&lt;a href=&quot;#messages-tab&quot; role=&quot;tab&quot; data-toggle=&quot;tab&quot; aria-controls=&quot;messages-tab&quot;&gt;Messages&lt;/a&gt;&lt;/li&gt;
                                                 &lt;li role=&quot;presentation&quot;&gt;&lt;a href=&quot;#notes-tab&quot; role=&quot;tab&quot; data-toggle=&quot;tab&quot; aria-controls=&quot;notes-tab&quot;&gt;Notes&lt;/a&gt;&lt;/li&gt;
                                                 &lt;li role=&quot;presentation&quot;&gt;&lt;a href=&quot;#verified-tab&quot; role=&quot;tab&quot; data-toggle=&quot;tab&quot; aria-controls=&quot;verified-tab&quot;&gt;Verification&lt;/a&gt;&lt;/li&gt;
                                             &lt;/ul&gt;
                                             &lt;div id=&quot;myTabContent&quot; class=&quot;tab-content&quot;&gt;
-                                                &lt;div role=&quot;tabpanel&quot; class=&quot;tab-pane fade in active&quot; id=&quot;to-dos-tab&quot; aria-labelledBy=&quot;to-dos-tab&quot;&gt;
+                                                &lt;div role=&quot;tabpanel&quot; class=&quot;tab-pane fade in active pre-scrollable&quot; id=&quot;to-dos-tab&quot; aria-labelledBy=&quot;to-dos-tab&quot;&gt;
                                                     &lt;div class=&quot;main-box-body clearfix&quot;&gt;
                                                         &lt;ul class=&quot;list-group to-dos&quot;&gt;
                                                             &lt;li class=&quot;list-group-item to-do-item-title&quot;&gt;
@@ -347,7 +710,7 @@
                                                         &lt;/ul&gt;
                                                     &lt;/div&gt;
                                                 &lt;/div&gt;
-                                                &lt;div role=&quot;tabpanel&quot; class=&quot;tab-pane fade&quot; id=&quot;messages-tab&quot; aria-labelledBy=&quot;messages-tab&quot;&gt;
+                                                &lt;div role=&quot;tabpanel&quot; class=&quot;tab-pane fade pre-scrollable&quot; id=&quot;messages-tab&quot; aria-labelledBy=&quot;messages-tab&quot;&gt;
                                                     &lt;div class=&quot;pull-right&quot;&gt;
                                                         &lt;span class=&quot;badge badge-warning&quot;&gt;recommendation&lt;/span&gt;
                                                     &lt;/div&gt;
@@ -373,7 +736,7 @@
                                                     &lt;p&gt;12/01/2015&lt;/p&gt;
                                                     &lt;p&gt;Create Better Weekdays Account&lt;/p&gt;
                                                 &lt;/div&gt;
-                                                &lt;div role=&quot;tabpanel&quot; class=&quot;tab-pane fade&quot; id=&quot;notes-tab&quot; aria-labelledBy=&quot;notes-tab&quot;&gt;
+                                                &lt;div role=&quot;tabpanel&quot; class=&quot;tab-pane fade pre-scrollable&quot; id=&quot;notes-tab&quot; aria-labelledBy=&quot;notes-tab&quot;&gt;
                                                     &lt;p&gt;Date: 12/07/2015&lt;/p&gt;
                                                     &lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.&lt;/p&gt;
 
@@ -386,15 +749,7 @@
 
                                                     &lt;p&gt;Date: 12/01/2015&lt;/p&gt;
                                                     &lt;p&gt;Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.&lt;/p&gt;                                                &lt;/div&gt;
-                                                &lt;div role=&quot;tabpanel&quot; class=&quot;tab-pane fade&quot; id=&quot;engagement-tab&quot; aria-labelledBy=&quot;engagement-tab&quot;&gt;
-                                                    &lt;ul class=&quot;fa-ul no-padding no-image&quot;&gt;
-                                                        &lt;li&gt;&lt;i class=&quot;fa-li&quot;&gt;&lt;/i&gt;Sonya was last active &lt;strong&gt;3 days ago&lt;/strong&gt;.&lt;/li&gt;
-                                                        &lt;li&gt;&lt;i class=&quot;fa-li&quot;&gt;&lt;/i&gt;They have previewed &lt;strong&gt;&lt;a href=&quot;#&quot;&gt;13&lt;/a&gt;&lt;/strong&gt; jobs, down-voted &lt;strong&gt;&lt;a href=&quot;#&quot;&gt;5&lt;/a&gt;&lt;/strong&gt; jobs, and up-voted &lt;strong&gt;&lt;a href=&quot;#&quot;&gt;8&lt;/a&gt;&lt;/strong&gt; jobs.&lt;/li&gt;
-                                                        &lt;li&gt;&lt;i class=&quot;fa-li&quot;&gt;&lt;/i&gt;Sonya also has viewed &lt;strong&gt;&lt;a href=&quot;#&quot;&gt;8&lt;/a&gt;&lt;/strong&gt; jobs, and shown interest in applying to &lt;strong&gt;&lt;a href=&quot;#&quot;&gt;2&lt;/a&gt;&lt;/strong&gt; jobs.&lt;/li&gt;
-                                                        &lt;li&gt;&lt;i class=&quot;fa-li&quot;&gt;&lt;/i&gt;They have completed &lt;strong&gt;&lt;a href=&quot;#&quot;&gt;4&lt;/a&gt;&lt;/strong&gt; to-dos.&lt;/li&gt;
-                                                    &lt;/ul&gt;
-                                                &lt;/div&gt;
-                                                &lt;div role=&quot;tabpanel&quot; class=&quot;tab-pane fade&quot; id=&quot;verified-tab&quot; aria-labelledBy=&quot;verified-tab&quot;&gt;
+                                                &lt;div role=&quot;tabpanel&quot; class=&quot;tab-pane fade pre-scrollable&quot; id=&quot;verified-tab&quot; aria-labelledBy=&quot;verified-tab&quot;&gt;
                                                     &lt;h4 style=&quot;float:left;&quot;&gt; Complete: 9 / 9&lt;/h4&gt;
 
                                                     &lt;div class=&quot;btn-group&quot; style=&quot;float:right; margin-bottom:20px;&quot;&gt;
@@ -661,7 +1016,7 @@
                         &lt;/select&gt;
                     &lt;/div&gt;
                     &lt;div class=&quot;form-group&quot;&gt;
-                        &lt;label for=&quot;to-do-title&quot; class=&quot;control-label&quot;&gt;Task:&lt;/label&gt;
+                        &lt;label for=&quot;to-do-title&quot; class=&quot;control-label&quot;&gt;Title:&lt;/label&gt;
                         &lt;input id=&quot;to-do-title&quot; class=&quot;form-control&quot; placeholder=&quot;&quot; type=&quot;text&quot; &gt;
                     &lt;/div&gt;
                 &lt;/form&gt;

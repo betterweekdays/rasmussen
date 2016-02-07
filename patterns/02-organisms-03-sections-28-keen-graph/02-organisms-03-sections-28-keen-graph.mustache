@@ -1,0 +1,155 @@
+&lt;div id=&quot;my_chart&quot;&gt;&lt;/div&gt;
+&lt;script type=&quot;application/javascript&quot;&gt;
+    var client = new Keen({
+        projectId: &quot;5596ea26672e6c2eb846b682&quot;,
+        readKey: &quot;1a072662bdeff8ff84672430b306d2aae22363f7bba6c8021b71548260adb82eab584fa5db7a72bb76a9a91e1f7af2752dac5bb54c837a3bc0da3e1832638796bcbc39ea9d3341961162b08339c3043231783893681041eab5c53d221ee65dee624561fe20ed975249e4db4d62cafffb&quot;
+
+    });
+
+    Keen.ready(function(){
+
+        var interval = &quot;daily&quot;;
+        var timeframe = &quot;this_21_days&quot;;
+        var timezone = &quot;UTC&quot;;
+
+        var previews = new Keen.Query(&quot;count&quot;, {
+            eventCollection: &quot;playlist&quot;,
+            filters: [
+                {
+                    &quot;operator&quot;: &quot;eq&quot;,
+                    &quot;property_name&quot;: &quot;org_id&quot;,
+                    &quot;property_value&quot;: &quot;59337&quot;
+                }
+            ],
+            interval: interval,
+            timeframe: timeframe,
+            timezone: timezone
+        });
+
+        var interactions = new Keen.Query(&quot;count&quot;, { // second query
+            eventCollection: &quot;interaction&quot;,
+            filters: [
+                {
+                    &quot;operator&quot;: &quot;eq&quot;,
+                    &quot;property_name&quot;: &quot;org_id&quot;,
+                    &quot;property_value&quot;: &quot;59337&quot;
+                }
+            ],
+            interval: interval,
+            timeframe: timeframe,
+            timezone: timezone
+        });
+
+        var interested = new Keen.Query(&quot;count&quot;, {
+            eventCollection: &quot;interestedapplying&quot;,
+            filters: [
+                {
+                    &quot;operator&quot;: &quot;eq&quot;,
+                    &quot;property_name&quot;: &quot;org_id&quot;,
+                    &quot;property_value&quot;: &quot;59337&quot;
+                }
+            ],
+            interval: &quot;daily&quot;,
+            timeframe: &quot;this_21_days&quot;,
+            timezone: &quot;UTC&quot;
+        });
+
+        var chart = new Keen.Dataviz()
+            .el(document.getElementById(&quot;my_chart&quot;))
+            .colors([ &quot;#ff0000&quot;, &quot;#222&quot;, &quot;lightblue&quot; ])
+            .chartType(&quot;linechart&quot;)
+            .title([])
+            .height(300)
+            .chartOptions({
+                chartArea:{
+                    left:40,
+                    top:20,
+                    bottom: '0%',
+                    width: '90%',
+                },
+                lineWidth: 2,
+                pointSize: 3,
+                curveType: &quot;function&quot;,
+                series: {
+                    0: { color: '#F7941E' },
+                    1: { color: '#0691F9' },
+                    2: { color: '#75D042' }
+                },
+                tooltip: {
+                    textStyle: {
+                        color: '#555',
+                        fontName: 'Proxima Nova',
+                        fontSize: 12
+                    }
+                },
+                hAxis: {
+                    titleTextStyle: {
+                        italic: false,
+                        fontSize: 12,
+                        fontName: 'Proxima Nova',
+                        color: '#555'
+                    },
+                    format:'M/d/yy',
+                    gridlines: { count: 7},
+                    textStyle: {
+                        color: '#555',
+                        fontName: 'Proxima Nova',
+                        fontSize: 12
+                    },
+                    gridlines: {
+                        color: 'transparent'
+                    }
+                },
+                vAxis: {
+                    title: 'Interactions',
+                    titleTextStyle: {
+                        italic: false,
+                        fontSize: 12,
+                        fontName: 'Proxima Nova',
+                        color: '#555'
+                    },
+                    textStyle: {
+                        color: '#555',
+                        fontName: 'Proxima Nova',
+                        fontSize: 12
+                    },
+                    gridlines: {
+                        color: '#eee'
+                    }
+                },
+                legend: { position: &quot;bottom&quot; }
+            })
+            .prepare();
+
+        client.run([previews, interactions, interested], function(err, res){ // run the queries
+
+            var result1 = res[0].result;  // data from first query
+            var result2 = res[1].result;  // data from second query
+            var result3 = res[2].result;  // data from third query
+            var data = [];  // place for combined results
+            var i=0;
+
+            while (i &lt; result1.length) {
+                // res[1].result/res[0].result).toFixed(2) * 100
+                // console.log(result1[i]);
+
+                data[i] = { // format the data so it can be charted
+                    timeframe: result1[i][&quot;timeframe&quot;],
+                    value: [
+                        { category: &quot;Previews&quot;, result: result1[i][&quot;value&quot;] },
+                        { category: &quot;Interactions&quot;, result: result2[i][&quot;value&quot;] },
+                        { category: &quot;Interested in Applying&quot;, result: result3[i][&quot;value&quot;] }
+                    ]
+                };
+
+                if (i == result1.length-1) { // chart the data
+                    chart
+                    .parseRawData({ result: data })
+                    .render();
+                }
+                i++;
+            }
+        });
+
+    });
+&lt;/script&gt;

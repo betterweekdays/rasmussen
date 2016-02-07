@@ -83,31 +83,57 @@
                                     &lt;div class=&quot;main-box tab-box minimal-tabs&quot;&gt;
                                         &lt;div class=&quot;bs-example bs-example-tabs&quot; data-example-id=&quot;togglable-tabs&quot;&gt;
                                             &lt;ul id=&quot;myTabs&quot; class=&quot;nav nav-tabs&quot; role=&quot;tablist&quot;&gt;
+                                                &lt;li role=&quot;presentation&quot; class=&quot;active&quot;&gt;&lt;a href=&quot;#engagement-tab&quot; role=&quot;tab&quot; data-toggle=&quot;tab&quot; aria-controls=&quot;engagement-tab&quot;&gt;Total Engagement&lt;/a&gt;&lt;/li&gt;
+                                                &lt;li role=&quot;presentation&quot;&gt;&lt;a href=&quot;#interested-tab&quot; role=&quot;tab&quot; data-toggle=&quot;tab&quot; aria-controls=&quot;interested-tab&quot;&gt;Interested in Applying&lt;/a&gt;&lt;/li&gt;
+                                                &lt;li role=&quot;presentation&quot;&gt;&lt;a href=&quot;#favorites-tab&quot; role=&quot;tab&quot; data-toggle=&quot;tab&quot; aria-controls=&quot;favorites-tab&quot; aria-expanded=&quot;true&quot;&gt;Favorites&lt;/a&gt;&lt;/li&gt;
+                                                &lt;li role=&quot;presentation&quot;&gt;&lt;a href=&quot;#previews-tab&quot; role=&quot;tab&quot; data-toggle=&quot;tab&quot; aria-controls=&quot;previews-tab&quot;&gt;Previews&lt;/a&gt;&lt;/li&gt;
+                                            &lt;/ul&gt;
+                                            &lt;div id=&quot;myTabContent&quot; class=&quot;tab-content&quot;&gt;
+                                                &lt;div role=&quot;tabpanel&quot; class=&quot;tab-pane fade in active pre-scrollable&quot; id=&quot;engagement-tab&quot; aria-labelledBy=&quot;engagement-tab&quot;&gt;
+                                                    &lt;div class=&quot;row&quot;&gt;
+                                                        &lt;div class=&quot;col-md-12&quot;&gt;
+                                                            &lt;div class=&quot;graph-box&quot;&gt;
+                                                                {{&gt; organisms-keen-graph }}
+                                                            &lt;/div&gt;
+                                                        &lt;/div&gt;
+                                                    &lt;/div&gt;
+                                                &lt;/div&gt;
+                                                &lt;div role=&quot;tabpanel&quot; class=&quot;tab-pane fade pre-scrollable&quot; id=&quot;interested-tab&quot; aria-labelledBy=&quot;interested-tab&quot;&gt;
+                                                    &lt;ul&gt;
+                                                        &lt;li class=&quot;list-group-item text-center&quot;&gt;
+                                                            &lt;i class=&quot;fa fa-star-half-empty giant&quot;&gt;&lt;/i&gt;&lt;p&gt;Nothing yet!&lt;/p&gt;&lt;p&gt;Reach out to this student to encourage them to get in the game!&lt;/p&gt;
+                                                        &lt;/li&gt;
+                                                    &lt;/ul&gt;
+                                                &lt;/div&gt;
+                                                &lt;div role=&quot;tabpanel&quot; class=&quot;tab-pane fade pre-scrollable&quot; id=&quot;favorites-tab&quot; aria-labelledBy=&quot;favorites-tab&quot;&gt;
+                                                    {{&gt; organisms-listjobs-student-cs }}
+                                                &lt;/div&gt;
+                                                &lt;div role=&quot;tabpanel&quot; class=&quot;tab-pane fade pre-scrollable&quot; id=&quot;previews-tab&quot; aria-labelledBy=&quot;previews-tab&quot;&gt;
+                                                    {{&gt; organisms-listjobs-student-cs }}
+                                                &lt;/div&gt;
+                                            &lt;/div&gt;
+                                        &lt;/div&gt;&lt;!-- /example --&gt;
+                                    &lt;/div&gt;
+
+                                    &lt;div class=&quot;main-box tab-box minimal-tabs&quot;&gt;
+                                        &lt;div class=&quot;bs-example bs-example-tabs&quot; data-example-id=&quot;togglable-tabs&quot;&gt;
+                                            &lt;ul id=&quot;myTabs&quot; class=&quot;nav nav-tabs&quot; role=&quot;tablist&quot;&gt;
                                                 &lt;li role=&quot;presentation&quot; class=&quot;active&quot;&gt;&lt;a href=&quot;#to-dos-tab&quot; role=&quot;tab&quot; data-toggle=&quot;tab&quot; aria-controls=&quot;to-dos-tab&quot;&gt;To-Dos&lt;/a&gt;&lt;/li&gt;
-                                                &lt;li role=&quot;presentation&quot;&gt;&lt;a href=&quot;#engagement-tab&quot; role=&quot;tab&quot; data-toggle=&quot;tab&quot; aria-controls=&quot;engagement-tab&quot; aria-expanded=&quot;true&quot;&gt;Engagement&lt;/a&gt;&lt;/li&gt;
                                                 &lt;li role=&quot;presentation&quot;&gt;&lt;a href=&quot;#messages-tab&quot; role=&quot;tab&quot; data-toggle=&quot;tab&quot; aria-controls=&quot;messages-tab&quot;&gt;Messages&lt;/a&gt;&lt;/li&gt;
                                                 &lt;li role=&quot;presentation&quot;&gt;&lt;a href=&quot;#notes-tab&quot; role=&quot;tab&quot; data-toggle=&quot;tab&quot; aria-controls=&quot;notes-tab&quot;&gt;Notes&lt;/a&gt;&lt;/li&gt;
                                                 &lt;li role=&quot;presentation&quot;&gt;&lt;a href=&quot;#verified-tab&quot; role=&quot;tab&quot; data-toggle=&quot;tab&quot; aria-controls=&quot;verified-tab&quot;&gt;Verification&lt;/a&gt;&lt;/li&gt;
                                             &lt;/ul&gt;
                                             &lt;div id=&quot;myTabContent&quot; class=&quot;tab-content&quot;&gt;
-                                                &lt;div role=&quot;tabpanel&quot; class=&quot;tab-pane fade in active&quot; id=&quot;to-dos-tab&quot; aria-labelledBy=&quot;to-dos-tab&quot;&gt;
+                                                &lt;div role=&quot;tabpanel&quot; class=&quot;tab-pane fade in active pre-scrollable&quot; id=&quot;to-dos-tab&quot; aria-labelledBy=&quot;to-dos-tab&quot;&gt;
                                                     {{&gt; organisms-to-dos-student-cs }}
                                                 &lt;/div&gt;
-                                                &lt;div role=&quot;tabpanel&quot; class=&quot;tab-pane fade&quot; id=&quot;messages-tab&quot; aria-labelledBy=&quot;messages-tab&quot;&gt;
+                                                &lt;div role=&quot;tabpanel&quot; class=&quot;tab-pane fade pre-scrollable&quot; id=&quot;messages-tab&quot; aria-labelledBy=&quot;messages-tab&quot;&gt;
                                                     {{&gt; organisms-messages-list }}
                                                 &lt;/div&gt;
-                                                &lt;div role=&quot;tabpanel&quot; class=&quot;tab-pane fade&quot; id=&quot;notes-tab&quot; aria-labelledBy=&quot;notes-tab&quot;&gt;
+                                                &lt;div role=&quot;tabpanel&quot; class=&quot;tab-pane fade pre-scrollable&quot; id=&quot;notes-tab&quot; aria-labelledBy=&quot;notes-tab&quot;&gt;
                                                     {{&gt; organisms-notes-list }}
                                                 &lt;/div&gt;
-                                                &lt;div role=&quot;tabpanel&quot; class=&quot;tab-pane fade&quot; id=&quot;engagement-tab&quot; aria-labelledBy=&quot;engagement-tab&quot;&gt;
-                                                    &lt;ul class=&quot;fa-ul no-padding no-image&quot;&gt;
-                                                        &lt;li&gt;&lt;i class=&quot;fa-li&quot;&gt;&lt;/i&gt;Sonya was last active &lt;strong&gt;3 days ago&lt;/strong&gt;.&lt;/li&gt;
-                                                        &lt;li&gt;&lt;i class=&quot;fa-li&quot;&gt;&lt;/i&gt;They have previewed &lt;strong&gt;&lt;a href=&quot;#&quot;&gt;13&lt;/a&gt;&lt;/strong&gt; jobs, down-voted &lt;strong&gt;&lt;a href=&quot;#&quot;&gt;5&lt;/a&gt;&lt;/strong&gt; jobs, and up-voted &lt;strong&gt;&lt;a href=&quot;#&quot;&gt;8&lt;/a&gt;&lt;/strong&gt; jobs.&lt;/li&gt;
-                                                        &lt;li&gt;&lt;i class=&quot;fa-li&quot;&gt;&lt;/i&gt;Sonya also has viewed &lt;strong&gt;&lt;a href=&quot;#&quot;&gt;8&lt;/a&gt;&lt;/strong&gt; jobs, and shown interest in applying to &lt;strong&gt;&lt;a href=&quot;#&quot;&gt;2&lt;/a&gt;&lt;/strong&gt; jobs.&lt;/li&gt;
-                                                        &lt;li&gt;&lt;i class=&quot;fa-li&quot;&gt;&lt;/i&gt;They have completed &lt;strong&gt;&lt;a href=&quot;#&quot;&gt;4&lt;/a&gt;&lt;/strong&gt; to-dos.&lt;/li&gt;
-                                                    &lt;/ul&gt;
-                                                &lt;/div&gt;
-                                                &lt;div role=&quot;tabpanel&quot; class=&quot;tab-pane fade&quot; id=&quot;verified-tab&quot; aria-labelledBy=&quot;verified-tab&quot;&gt;
+                                                &lt;div role=&quot;tabpanel&quot; class=&quot;tab-pane fade pre-scrollable&quot; id=&quot;verified-tab&quot; aria-labelledBy=&quot;verified-tab&quot;&gt;
                                                     {{&gt; organisms-verification }}
                                                 &lt;/div&gt;
                                             &lt;/div&gt;

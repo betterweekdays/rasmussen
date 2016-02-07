@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html class="pl">
+	<head>
+		<title>Better Weekdays Pattern Lab</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width" />
+
+		<!-- bootstrap -->
+        <link rel="stylesheet" type="text/css" href="//centaurus.adbee.technology/css/bootstrap/bootstrap.min.css" />
+
+        <!-- libraries -->
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="../../css/libs/nanoscroller.css" />
+
+		<!-- global styles -->
+		<link rel="stylesheet" href="../../css/theme/theme_styles.css?1454528368" media="all" />
+
+        <!-- this page specific styles -->
+
+        <!-- google font libraries -->
+        <link href='//fonts.googleapis.com/css?family=Open+Sans:400,600,700,300|Titillium+Web:200,300,400' rel='stylesheet' type='text/css'>
+
+        <!--[if lt IE 9]>
+		<script src="../../js/html5shiv.js"></script>
+		<script src="../../js/respond.min.js"></script>
+        <![endif]-->
+
+		<!-- Begin Pattern Lab (Required for Pattern Lab to run properly) -->
+				<!-- never cache patterns -->
+		<meta http-equiv="cache-control" content="max-age=0" />
+		<meta http-equiv="cache-control" content="no-cache" />
+		<meta http-equiv="expires" content="0" />
+		<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+		<meta http-equiv="pragma" content="no-cache" />
+		
+		<link rel="stylesheet" href="../../styleguide/css/styleguide.css?1454528368" media="all">
+		<link rel="stylesheet" href="../../styleguide/css/styleguide-specific.css?1454528368" media="all" />
+		
+
+		<!-- End Pattern Lab -->
+
+	
+	</head>
+	<body class="fixed-header" id="">
+		<div id="my_chart"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.22/require.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/q.js/2.0.3/q.min.js"></script>
+<script type="application/javascript">
+    var client = new Keen({
+        projectId: "5596ea26672e6c2eb846b682",
+        readKey: "1a072662bdeff8ff84672430b306d2aae22363f7bba6c8021b71548260adb82eab584fa5db7a72bb76a9a91e1f7af2752dac5bb54c837a3bc0da3e1832638796bcbc39ea9d3341961162b08339c3043231783893681041eab5c53d221ee65dee624561fe20ed975249e4db4d62cafffb"
+
+    });
+
+    Keen.ready(function(){
+
+        var weeks = [
+            {
+                "end": "2015-12-07T00:00:00.000+00:00",
+                "start": "2015-11-30T00:00:00.000+00:00"
+            },
+            {
+                "end": "2015-12-14T00:00:00.000+00:00",
+                "start": "2015-12-07T00:00:00.000+00:00"
+            },
+            {
+                "end": "2015-12-20T00:00:00.000+00:00",
+                "start": "2015-12-14T00:00:00.000+00:00"
+            }
+        ];
+        var timezone = "UTC";
+
+        // Go through each week time interval and get values.
+        function weeklyTotal(week) {
+            var deferred = Q.defer();
+            var preview = new Keen.Query("count", {
+                eventCollection: "playlist",
+                filters: [
+                    {
+                        "operator": "eq",
+                        "property_name": "org_id",
+                        "property_value": "59337"
+                    }
+                ],
+                timezone: timezone,
+                timeframe: week
+            });
+
+            client.run(preview, function(err, response){
+                console.log('Finished with weeklyTotal. Ready to call next.');
+                deferred.resolve(response.result);
+            });
+
+            return deferred.promise;
+        }
+
+        Q.all(weeks.map(weeklyTotal)).then(function(data) {
+            console.log(data);
+        });
+
+        function calculateWeeklyTotals() {
+            var values = [];
+            var deferred = Q.defer();
+            for (var i = 0, len = weeks.length; i < len; i++) {
+                var value = weeklyTotal(weeks[i]).then(weeklyTotal);
+            }
+            resolve(values);
+        }
+
+        /*calculateWeeklyTotals().then(function(val) {
+           console.log(val);
+           weektoweek(val);
+        });*/
+
+        function percentDifference(num1, num2) {
+            if (num1 > 0) {
+                return ((num2 - num1) / num1).toFixed(2) * 100;
+            }
+            else {
+                return 0;
+            }
+        }
+
+        function weektoweek(values) {
+            // Calculate week-to-week percentage based on values
+            var data = [0];
+            for (var i = 0, len = values.length; i < len; i++) {
+                var val1 = values[i];
+                var val2 = values[i + 1];
+                var calc = percentDifference(val1, val2);
+                console.log(val1);
+                console.log(val2);
+                console.log(calc);
+                data.push(calc);
+                console.log(data);
+            }
+        }
+
+//        var previews = new Keen.Query("count", {
+//            eventCollection: "playlist",
+//            filters: [
+//                {
+//                    "operator": "eq",
+//                    "property_name": "org_id",
+//                    "property_value": "59337"
+//                }
+//            ],
+//            timezone: timezone
+//        });
+//
+//        var chart = new Keen.Dataviz()
+//            .el(document.getElementById("my_chart"))
+//            .colors([ "#ff0000", "#222", "lightblue" ])
+//            .chartType("linechart")
+//            .title([])
+//            .height(350)
+//            .chartOptions({
+//                curveType: "function",
+//                hAxis: {
+//                    format:'MMM d',
+//                    gridlines: { count: 7}
+//                },
+//                legend: { position: "bottom" }
+//            })
+//            .prepare();
+//
+//        client.run([previews], function(err, res){ // run the queries
+//
+//            var result1 = res[0].result;  // data from first query
+//            var data = [];  // place for combined results
+//            var i=0;
+//
+//            while (i < result1.length) {
+//                // res[1].result/res[0].result).toFixed(2) * 100
+//                // console.log(result1[i]);
+//                data[i] = { // format the data so it can be charted
+//                    timeframe: result1[i]["timeframe"],
+//                    value: [
+//                        { category: "Previews", result: result1[i]["value"] },
+//                        { category: "Interactions", result: result2[i]["value"] },
+//                        { category: "Interested in Applying", result: result3[i]["value"] }
+//                    ]
+//                };
+//                if (i == result1.length-1) { // chart the data
+//                    chart
+//                    .parseRawData({ result: data })
+//                    .render();
+//                }
+//                i++;
+//            }
+//        });
+
+        /*client.draw(query, document.getElementById("my_chart"), {
+            colors: [ "#ff0000", "#222", "lightblue" ],
+            chartType: "linechart",
+            title: [],
+            height: 228,
+            colorMapping: {},
+            labelMapping: {},
+            labels: [],
+            chartOptions: {
+                // pass directly through to underlying vizz library
+                curveType: "function",
+                hAxis: {
+                    format:'MMM d'
+                }
+            }
+        });*/
+
+    });
+</script><!--DO NOT REMOVE-->
+	
+	<script>
+		// handle injection of items from PHP
+		var patternPartial = "organisms-keen-graph-weekbyweek";
+		var lineage        = [];
+		var lineageR       = [{"lineagePattern":"templates-career-services-dashboard","lineagePath":"..\/..\/patterns\/03-templates-00-career-services-00-career-services-dashboard\/03-templates-00-career-services-00-career-services-dashboard.html"}];
+		var patternState   = "";
+		var cssEnabled     = false;
+	</script>
+		<script>
+		/*!
+		 * scriptLoader - v0.1
+		 *
+		 * Copyright (c) 2014 Dave Olsen, http://dmolsen.com
+		 * Licensed under the MIT license
+		 *
+		 */
+		
+		var scriptLoader = {
+			
+			run: function(js,cb,target) {
+				var s  = document.getElementById(target+'-'+cb); 
+				for (var i = 0; i < js.length; i++) {
+					var src = (typeof js[i] != "string") ? js[i].src : js[i];
+					var c   = document.createElement('script');
+					c.src   = '../../'+src+'?'+cb;
+					if (typeof js[i] != "string") {
+						if (js[i].dep !== undefined) {
+							c.onload = function(dep,cb,target) {
+								return function() {
+									scriptLoader.run(dep,cb,target);
+								}
+							}(js[i].dep,cb,target);
+						}
+					}
+					s.parentNode.insertBefore(c,s);
+				}
+			}
+			
+		}
+	</script>
+	<script id="pl-js-polyfill-insert-1454528368">
+		(function() {
+			if (self != top) {
+				var cb = '1454528368';
+				var js = [];
+				if (typeof document !== "undefined" && !("classList" in document.documentElement)) {
+					js.push("styleguide/js/vendor/classlist-polyfill.js");
+				}
+				scriptLoader.run(js,cb,'pl-js-polyfill-insert');
+			}
+		})();
+	</script>
+	<script id="pl-js-insert-1454528368">
+		(function() {
+			if (self != top) {
+				var cb = '1454528368';
+				var js = [ { "src": "styleguide/js/vendor/jwerty.js", "dep": [ "styleguide/js/postmessage.js", { "src": "data/annotations.js", "dep": [ "styleguide/js/annotations-pattern.js" ] }, "styleguide/js/code-pattern.js" ] } ];
+				scriptLoader.run(js,cb,'pl-js-insert');
+			}
+		})();
+	</script>
+	
+
+
+<!-- intercom -->
+<script>
+    window.intercomSettings = {
+        app_id: "c8ondh7h",
+        name: "Nikola Tesla", // Full name
+        email: "nikola@example.com" // Email address
+    };
+</script>
+<script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()</script>
+
+
+<script src="//code.jquery.com/jquery-2.1.3.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.nanoscroller/0.8.4/javascripts/jquery.nanoscroller.min.js"></script>
+
+<!-- this page specific scripts -->
+
+
+
+
+
+<!-- theme scripts -->
+<script src="../../js/scripts.js"></script>
+<script src="//raw.githubusercontent.com/HubSpot/pace/v0.5.6/pace.min.js"></script>
+
+
+
+
+
+
+
+
+</body>
+</html>

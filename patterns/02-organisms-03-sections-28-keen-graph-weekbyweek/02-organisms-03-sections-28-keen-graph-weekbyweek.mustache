@@ -1,0 +1,167 @@
+&lt;div id=&quot;my_chart&quot;&gt;&lt;/div&gt;
+&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.22/require.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/q.js/2.0.3/q.min.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;application/javascript&quot;&gt;
+    var client = new Keen({
+        projectId: &quot;5596ea26672e6c2eb846b682&quot;,
+        readKey: &quot;1a072662bdeff8ff84672430b306d2aae22363f7bba6c8021b71548260adb82eab584fa5db7a72bb76a9a91e1f7af2752dac5bb54c837a3bc0da3e1832638796bcbc39ea9d3341961162b08339c3043231783893681041eab5c53d221ee65dee624561fe20ed975249e4db4d62cafffb&quot;
+
+    });
+
+    Keen.ready(function(){
+
+        var weeks = [
+            {
+                &quot;end&quot;: &quot;2015-12-07T00:00:00.000+00:00&quot;,
+                &quot;start&quot;: &quot;2015-11-30T00:00:00.000+00:00&quot;
+            },
+            {
+                &quot;end&quot;: &quot;2015-12-14T00:00:00.000+00:00&quot;,
+                &quot;start&quot;: &quot;2015-12-07T00:00:00.000+00:00&quot;
+            },
+            {
+                &quot;end&quot;: &quot;2015-12-20T00:00:00.000+00:00&quot;,
+                &quot;start&quot;: &quot;2015-12-14T00:00:00.000+00:00&quot;
+            }
+        ];
+        var timezone = &quot;UTC&quot;;
+
+        // Go through each week time interval and get values.
+        function weeklyTotal(week) {
+            var deferred = Q.defer();
+            var preview = new Keen.Query(&quot;count&quot;, {
+                eventCollection: &quot;playlist&quot;,
+                filters: [
+                    {
+                        &quot;operator&quot;: &quot;eq&quot;,
+                        &quot;property_name&quot;: &quot;org_id&quot;,
+                        &quot;property_value&quot;: &quot;59337&quot;
+                    }
+                ],
+                timezone: timezone,
+                timeframe: week
+            });
+
+            client.run(preview, function(err, response){
+                console.log('Finished with weeklyTotal. Ready to call next.');
+                deferred.resolve(response.result);
+            });
+
+            return deferred.promise;
+        }
+
+        Q.all(weeks.map(weeklyTotal)).then(function(data) {
+            console.log(data);
+        });
+
+        function calculateWeeklyTotals() {
+            var values = [];
+            var deferred = Q.defer();
+            for (var i = 0, len = weeks.length; i &lt; len; i++) {
+                var value = weeklyTotal(weeks[i]).then(weeklyTotal);
+            }
+            resolve(values);
+        }
+
+        /*calculateWeeklyTotals().then(function(val) {
+           console.log(val);
+           weektoweek(val);
+        });*/
+
+        function percentDifference(num1, num2) {
+            if (num1 &gt; 0) {
+                return ((num2 - num1) / num1).toFixed(2) * 100;
+            }
+            else {
+                return 0;
+            }
+        }
+
+        function weektoweek(values) {
+            // Calculate week-to-week percentage based on values
+            var data = [0];
+            for (var i = 0, len = values.length; i &lt; len; i++) {
+                var val1 = values[i];
+                var val2 = values[i + 1];
+                var calc = percentDifference(val1, val2);
+                console.log(val1);
+                console.log(val2);
+                console.log(calc);
+                data.push(calc);
+                console.log(data);
+            }
+        }
+
+//        var previews = new Keen.Query(&quot;count&quot;, {
+//            eventCollection: &quot;playlist&quot;,
+//            filters: [
+//                {
+//                    &quot;operator&quot;: &quot;eq&quot;,
+//                    &quot;property_name&quot;: &quot;org_id&quot;,
+//                    &quot;property_value&quot;: &quot;59337&quot;
+//                }
+//            ],
+//            timezone: timezone
+//        });
+//
+//        var chart = new Keen.Dataviz()
+//            .el(document.getElementById(&quot;my_chart&quot;))
+//            .colors([ &quot;#ff0000&quot;, &quot;#222&quot;, &quot;lightblue&quot; ])
+//            .chartType(&quot;linechart&quot;)
+//            .title([])
+//            .height(350)
+//            .chartOptions({
+//                curveType: &quot;function&quot;,
+//                hAxis: {
+//                    format:'MMM d',
+//                    gridlines: { count: 7}
+//                },
+//                legend: { position: &quot;bottom&quot; }
+//            })
+//            .prepare();
+//
+//        client.run([previews], function(err, res){ // run the queries
+//
+//            var result1 = res[0].result;  // data from first query
+//            var data = [];  // place for combined results
+//            var i=0;
+//
+//            while (i &lt; result1.length) {
+//                // res[1].result/res[0].result).toFixed(2) * 100
+//                // console.log(result1[i]);
+//                data[i] = { // format the data so it can be charted
+//                    timeframe: result1[i][&quot;timeframe&quot;],
+//                    value: [
+//                        { category: &quot;Previews&quot;, result: result1[i][&quot;value&quot;] },
+//                        { category: &quot;Interactions&quot;, result: result2[i][&quot;value&quot;] },
+//                        { category: &quot;Interested in Applying&quot;, result: result3[i][&quot;value&quot;] }
+//                    ]
+//                };
+//                if (i == result1.length-1) { // chart the data
+//                    chart
+//                    .parseRawData({ result: data })
+//                    .render();
+//                }
+//                i++;
+//            }
+//        });
+
+        /*client.draw(query, document.getElementById(&quot;my_chart&quot;), {
+            colors: [ &quot;#ff0000&quot;, &quot;#222&quot;, &quot;lightblue&quot; ],
+            chartType: &quot;linechart&quot;,
+            title: [],
+            height: 228,
+            colorMapping: {},
+            labelMapping: {},
+            labels: [],
+            chartOptions: {
+                // pass directly through to underlying vizz library
+                curveType: &quot;function&quot;,
+                hAxis: {
+                    format:'MMM d'
+                }
+            }
+        });*/
+
+    });
+&lt;/script&gt;
